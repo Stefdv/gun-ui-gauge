@@ -1,0 +1,106 @@
+<script src="js/gun.js" type="text/javascript"></script>
+
+<link rel="import" href="../../polymer/polymer.html">
+
+
+<!--
+`gun-db`
+webcomponent for GunDB
+
+@demo demo/index.html 
+-->
+
+<dom-module id="gun-db">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+  
+    <div id="chains"></div>
+  </template>
+
+  <script>
+
+
+    Polymer({
+
+      is: 'gun-db',
+
+      properties: {
+        gunLoaded: {
+          type: Boolean,
+          value: false,
+          observer:'_gunloadedChanged',
+          notify: true
+        },
+        peers: {
+          type: String,
+          value: false
+        },
+        file: {
+          type: String,
+          value: false
+        },
+        guntagger: {
+          type: Boolean,
+          value: false
+        }
+
+      },
+   
+       ready: function() {
+       if( typeof gun != 'undefined' ){
+          console.log('%cgun-db: %cgun %s is already initialized using that one',"color:brown","color:black",Gun.version)
+         this._fire();
+        } else {
+          console.log('%cgun-db: %csetting up gun',"color:brown","color:black")
+          this.gunLoaded = true;
+        }
+      },
+     
+      _gunloadedChanged: function(n,o) {
+         n ? this._setChains() : null;
+      },
+      _setChains: function() {
+        if(this.guntagger) { this._addScript('chain-guntagger','bower_components/guntagger/chain-guntagger.html') };
+        this._startGun();
+        
+      },
+
+      _startGun: function() {
+        gun = Gun({
+          peers: this.peers ? this._validate(this.peers) : null,
+          file: this.file ? this.file : 'data.json'
+        });
+        this._fire()
+      },
+      _validate:function(peers) {
+        if(arguments.length !==1) {
+          peers.split(',');
+          return peers.map(function(p){
+            return peer;
+          });
+        } else { return peers;}
+      },
+      _addScript: function(name,src) {
+
+        this.importHref(src, function(e) {
+          var newElement = document.createElement(name);
+          Polymer.dom(this.$.chains).appendChild(newElement);  
+        }, function(e) {
+          // loading error 
+          console.error('%s does not exists, did you run "bower install %s?',name,name.split('-')[1])
+        });
+      },
+      _fire: function() {
+        this.async(function(){
+          console.log('%cgun %s %cavailable',"color:blue",Gun.version,"color:black")
+          this.fire('iron-signal',{name:'gun-loaded',data:{appName:this.appName}});
+        },500)  
+      }
+
+    });
+  </script>
+</dom-module>

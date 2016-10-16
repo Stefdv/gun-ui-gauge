@@ -1,0 +1,116 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "gun@github:amark/gun#0.5",
+        "scope": null,
+        "escapedName": "gun",
+        "name": "gun",
+        "rawSpec": "github:amark/gun#0.5",
+        "spec": "github:amark/gun#0.5",
+        "type": "hosted",
+        "hosted": {
+          "type": "github",
+          "ssh": "git@github.com:amark/gun.git#0.5",
+          "sshUrl": "git+ssh://git@github.com/amark/gun.git#0.5",
+          "httpsUrl": "git+https://github.com/amark/gun.git#0.5",
+          "gitUrl": "git://github.com/amark/gun.git#0.5",
+          "shortcut": "github:amark/gun#0.5",
+          "directUrl": "https://raw.githubusercontent.com/amark/gun/0.5/package.json"
+        }
+      },
+      "d:\\GUIL\\from npm"
+    ]
+  ],
+  "_from": "amark/gun#0.5",
+  "_id": "gun@0.4.0",
+  "_inCache": true,
+  "_location": "/gun",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "gun@github:amark/gun#0.5",
+    "scope": null,
+    "escapedName": "gun",
+    "name": "gun",
+    "rawSpec": "github:amark/gun#0.5",
+    "spec": "github:amark/gun#0.5",
+    "type": "hosted",
+    "hosted": {
+      "type": "github",
+      "ssh": "git@github.com:amark/gun.git#0.5",
+      "sshUrl": "git+ssh://git@github.com/amark/gun.git#0.5",
+      "httpsUrl": "git+https://github.com/amark/gun.git#0.5",
+      "gitUrl": "git://github.com/amark/gun.git#0.5",
+      "shortcut": "github:amark/gun#0.5",
+      "directUrl": "https://raw.githubusercontent.com/amark/gun/0.5/package.json"
+    }
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "git://github.com/amark/gun.git#58753e0f9e02ac2de317d7cf71acfe214ffe3e99",
+  "_shasum": "c077da0f989fbd28c8b31bfb2a4bb4c43a665028",
+  "_shrinkwrap": null,
+  "_spec": "gun@github:amark/gun#0.5",
+  "_where": "d:\\GUIL\\from npm",
+  "author": {
+    "name": "Mark Nadal"
+  },
+  "bugs": {
+    "url": "https://github.com/amark/gun/issues"
+  },
+  "dependencies": {
+    "aws-sdk": "~>2.0.0",
+    "formidable": "~>1.0.15",
+    "ws": "~>1.0.1"
+  },
+  "description": "Graph engine",
+  "devDependencies": {
+    "mocha": "~>1.9.0",
+    "panic-server": "~>0.3.0",
+    "selenium-webdriver": "~>2.53.2"
+  },
+  "engines": {
+    "iojs": ">=0.0.1",
+    "node": ">=0.6.6"
+  },
+  "gitHead": "58753e0f9e02ac2de317d7cf71acfe214ffe3e99",
+  "homepage": "https://github.com/amark/gun#readme",
+  "keywords": [
+    "gun",
+    "gunDB",
+    "graph",
+    "document",
+    "key",
+    "value",
+    "relational",
+    "datastore",
+    "database",
+    "engine",
+    "realtime",
+    "decentralized",
+    "peer-to-peer",
+    "distributed",
+    "P2P",
+    "OSS",
+    "embedded",
+    "localstorage",
+    "S3"
+  ],
+  "license": "(Zlib OR MIT OR Apache-2.0)",
+  "main": "index.js",
+  "name": "gun",
+  "optionalDependencies": {},
+  "readme": "# gun [![NPM downloads](https://img.shields.io/npm/dm/gun.svg?style=flat)](https://npmjs.org/package/gun) [![Build Status](https://travis-ci.org/amark/gun.svg?branch=master)](https://travis-ci.org/amark/gun) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/amark/gun?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)\r\n\r\nGUN is a realtime, distributed, offline-first, graph database engine. Lightweight and powerful, at just **~9KB** gzipped.\r\n\r\n## Why?\r\n\r\n - **Realtime** - It may be trivial to get realtime updates with socket.io or something, but what you do not get is *state synchronization*. GUN does this for you out of the box, assuring that two users' simultaneous updates won't concurrently break each other.\r\n - **Distributed** - GUN is peer-to-peer by design, meaning you have no centralized database server to maintain or that could crash. This lets you sleep through the night without worrying about database DevOps - we call this \"NoDB\". From that, you can build decentralized, federated, or centralized apps.\r\n - **Offline-first** - GUN works even if your internet or cell reception doesn't. Users can still plug away and save data as normal, and then when the network comes back online GUN will automatically synchronize all the changes and handle any conflicts for you.\r\n - **Graph** - Most databases force you to bend over backwards to match their storage constraints. But graphs are different, they let you have any data structure you want. Whether that be traditional tables with relations, document oriented trees, or tons of circular references. You choose.\r\n\r\n## Quickstart\r\n\r\nTry the [interactive tutorial](http://gun.js.org/think.html) in the browser (**5min** ~ average developer). Or run the NodeJS [demo example apps](#demos) (**5min** ~ average developer).\r\n\r\n## Table of Contents\r\n - [Demos](#demos)\r\n   - [Videos](#videos)\r\n   - [Projects](#gun-projects)  \r\n - [How to get started](#how-to-get-started)\r\n - [Modules](#gun-modules)\r\n - [How can I help make gun even more awesome?](#how-can-i-help-make-gun-even-more-awesome)\r\n - [License](#license)\r\n   - [Contributors](#contributors)\r\n - [Changelog](#changelog)\r\n - [Stay up-to-date](#stay-up-to-date)\r\n - **[API Reference](https://github.com/amark/gun/wiki/API-(v0.3.x))**  :arrow_upper_right:\r\n\r\n## Demos\r\n\r\n - [Online example applications](http://gunjs.herokuapp.com/)\r\n - The above examples are included in this repo. You can run them locally by running the following commands in your terminal or on your command line:\r\n\r\n   > **Note:** If you don't have [node](http://nodejs.org/) or [npm](https://www.npmjs.com/), read [this](https://github.com/amark/gun/blob/master/examples/install.sh) first.\r\n\r\n   ```bash\r\n   npm install gun\r\n   cd node_modules/gun\r\n   node examples/http.js 8080\r\n   ```\r\n\r\n   Then visit [http://localhost:8080](http://localhost:8080) in your browser. \r\n\r\n   If that did not work it is probably because npm installed it to a global directory. To fix that try `mkdir node_modules` in your desired directory and re-run the above commands. You also might have to add `sudo` in front of the commands.\r\n\r\n### Videos\r\n - [Fault tolerance](https://www.youtube.com/watch?v=-i-11T5ZI9o&feature=youtu.be) (01:01)\r\n - [Saving relational or document based data](https://www.youtube.com/watch?v=cOO6wz1rZVY&feature=youtu.be) (06:59)\r\n - [GUN's YouTube channel](https://www.youtube.com/channel/UCQAtpf-zi9Pp4__2nToOM8g/playlists) also has videos\r\n\r\n### <a name=\"gun-projects\"></a>Projects\r\n - GUN users are encouraged to add their projects to this [running projects list](https://github.com/amark/gun/wiki/projects).\r\n\r\n## How to get started\r\n - Until we complete the [Getting Started with GUN](https://github.com/amark/gun/wiki/getting-started-(v0.3.x)) Guide, please review the [API documentation](https://github.com/amark/gun/wiki/API-(v0.3.x)) and [examples' source code](https://github.com/amark/gun/blob/master/examples).\r\n - Check out and add example code [snippets](https://github.com/amark/gun/wiki/snippets-(v0.3.x)) —including micro-modules— to address specific situations.\r\n\r\n## <a name=\"gun-modules\"></a>Modules\r\nGUN is designed to be as minimal as possible, with any additional functionality being provided via modules.  Please refer to the [modules](https://github.com/amark/gun/wiki/modules) page for a list of existing extensions. Please refer to the [gun-extensions](https://github.com/gundb/gun-extensions/issues) repo to see what extensions have been requested or to request an extension.\r\n\r\n## How can I help make gun even more awesome?\r\n - Star this repo\r\n - Follow us and share your appreciation via [Gitter](https://gitter.im/amark/gun), [Twitter](https://twitter.com/databasegun), [LinkedIn](https://www.linkedin.com/company/gun-inc), and [Facebook](https://www.facebook.com/databasegun)\r\n - [Share projects you've written](https://github.com/amark/gun/wiki/projects)\r\n - [Build extensions or squish bugs](https://waffle.io/amark/gun)\r\n         - If you are working on an extension, familiarize yourself with [GUN's Module API](https://github.com/amark/gun/wiki/Building-Modules-for-Gun)\r\n\r\n## License\r\n\r\nDesigned with ♥ by Mark Nadal, the gun team, and many amazing contributors.  Liberally licensed under [Zlib / MIT / Apache 2.0](https://github.com/amark/gun/blob/master/LICENSE.md).\r\n\r\n## Contributors\r\n\r\nThanks to the following people who have contributed to GUN, via code, issues, or conversation (this list has quickly become tremendously behind! We'll probably turn this into a dedicated wiki page so you can add yourself):\r\n\r\n[agborkowski](https://github.com/agborkowski); [alexlafroscia](https://github.com/alexlafroscia); [anubiann00b](https://github.com/anubiann00b); [bromagosa](https://github.com/bromagosa); [coolaj86](https://github.com/coolaj86); [d-oliveros](https://github.com/d-oliveros), [danscan](https://github.com/danscan); **[forrestjt](https://github.com/forrestjt) ([file.js](https://github.com/amark/gun/blob/master/lib/file.js))**; [gedw99](https://github.com/gedw99); [HelloCodeMing](https://github.com/HelloCodeMing); **[JosePedroDias](https://github.com/josepedrodias) (graph visualizer)**; **[jveres](https://github.com/jveres) ([todoMVC](https://github.com/jveres/todomvc) [live demo](http://todos.loqali.com/))**; [ndarilek](https://github.com/ndarilek); [onetom](https://github.com/onetom); [phpnode](https://github.com/phpnode); [PsychoLlama](https://github.com/PsychoLlama); **[RangerMauve](https://github.com/RangerMauve) ([schema](https://github.com/gundb/gun-schema))**; [riston](https://github.com/riston); [rootsical](https://github.com/rootsical); [rrrene](https://github.com/rrrene); [ssr1ram](https://github.com/ssr1ram); [Xe](https://github.com/Xe); [zot](https://github.com/zot);\r\n[ayurmedia](https://github.com/ayurmedia);\r\n\r\nThis list of contributors was manually compiled and alphabetically sorted. If we missed you, please submit an issue so we can get you added!\r\n\r\n## [Changelog](https://github.com/amark/gun/blob/master/CHANGELOG.md#03)\r\n\r\nAlso see the current [Release List](https://github.com/amark/gun/releases) and [Tag List](https://github.com/amark/gun/tags) for quick access to relevant versions.\r\n\r\n==========================\r\n<a name=\"stay-up-to-date\"></a>\r\n\r\n<a href=\"https://gitter.im/amark/gun\"><img alt=\"Gitter channel\" src=\"https://badges.gitter.im/Join%20Chat.svg\" /></a>\r\n[![YouTube](https://img.shields.io/badge/You-Tube-red.svg)](https://www.youtube.com/channel/UCQAtpf-zi9Pp4__2nToOM8g) [![LinkedIn](https://img.shields.io/badge/Linked-In-blue.svg)](https://www.linkedin.com/company/gun-inc) [![Twitter Follow](https://img.shields.io/twitter/follow/databasegun.svg?style=social)](https://twitter.com/databasegun)\r\n",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amark/gun.git"
+  },
+  "scripts": {
+    "start": "node examples/http.js 8080",
+    "test": "mocha",
+    "unbuild": "node lib/unbuild.js"
+  },
+  "version": "0.4.0"
+}

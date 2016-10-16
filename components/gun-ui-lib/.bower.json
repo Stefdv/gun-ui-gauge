@@ -1,0 +1,26 @@
+{
+  "name": "gun-ui-lib",
+  "authors": [
+    "Stefdv <stefdv2@hotmail.com>"
+  ],
+  "description": "main component for gun-ui-lib",
+  "main": "",
+  "license": "MIT",
+  "homepage": "https://github.com/Stefdv/gun-ui-lib",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "efbb8f3193",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "efbb8f3193a26e50b3626042cd9892caf37fb541"
+  },
+  "_source": "https://github.com/Stefdv/gun-ui-lib.git",
+  "_target": "*",
+  "_originalSource": "gun-ui-lib"
+}

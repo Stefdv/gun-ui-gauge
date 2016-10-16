@@ -1,0 +1,17 @@
+{
+  "name": "gun-ui-lib",
+  "authors": [
+    "Stefdv <stefdv2@hotmail.com>"
+  ],
+  "description": "main component for gun-ui-lib",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

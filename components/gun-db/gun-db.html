@@ -1,0 +1,139 @@
+<script src="../gun/gun.js" type="text/javascript"></script>
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+Install with bower:
+
+    bower install gun-db
+
+Then import v0.3995:
+
+    <link rel='import' href='bower_components/gun-db/gun-db.html'>
+
+or v0.4 (v0.5 pre-release):
+
+    <link rel="import" href="bower_components/gun-db/v5/gun-db.html">
+
+
+`<gun-db>` injects GunDb into your page.
+
+ In typical use, just slap `<gun-db>` in your `<body>`,
+
+    <body>
+      <gun-db></gun-db>
+
+Wham! Gun is available as the variable `gun`!
+
+See the demo! ( button upper right)
+@demo demo/index.html 
+-->
+<dom-module id="gun-db">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+  
+    <div id="chains"></div>
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'gun-db',
+
+      properties: {
+        /**
+         * Internal trigger when gun is available
+         * @type {Booelean}
+         */
+        _gunLoaded: {
+          type: Boolean,
+          value: false,
+          observer:'_gunloadedChanged',
+          notify: true
+        },
+        /**
+         * Set the peers you want to connect to
+         * @type {String}
+         */
+        peers: {
+          type: String,
+          value: false
+        },
+        /**
+         * Set the file name
+         * <b>Not recommended for production</b>
+         * @type {String}
+         */
+        file: {
+          type: String,
+          value: false
+        },
+        /**
+         * Do you want to use the guntagger module
+         * @type {Boolean}
+         */
+        guntagger: {
+          type: Boolean,
+          value: false
+        }
+
+      },
+   
+      ready: function() {
+       if( typeof gun != 'undefined' ){
+           console.log('%cgun-db: %cgun v%s is already initialized using that one',"color:brown","color:black",Gun.version)
+         this._fire();
+        } else {
+          console.log('%cgun-db: %csetting up gun',"color:brown","color:black")
+          this._gunLoaded = true;
+        }
+      },
+      _gunloadedChanged: function(loaded) {
+         loaded ? this._setChains() : null;
+      },
+      _setChains: function() {
+        if(this.guntagger) { this._addScript('chain-guntagger','bower_components/guntagger/chain-guntagger.html') };
+        this._startGun();
+        
+      },
+
+      _startGun: function() {
+        gun = Gun({
+          peers: this.peers ? this._validate(this.peers) : null,
+          file: this.file ? this.file : 'data.json'
+        });
+        this._fire()
+      },
+      _validate:function(peers) {
+        if(arguments.length !==1) {
+          peers.split(',');
+          return peers.map(function(p){
+            return peer;
+          });
+        } else { return peers;}
+      },
+      _addScript: function(name,src) {
+
+        this.importHref(src, function(e) {
+          var newElement = document.createElement(name);
+          Polymer.dom(this.$.chains).appendChild(newElement);  
+        }, function(e) {
+          // loading error 
+          console.error('%s does not exists, did you run "bower install %s?',name,name.split('-')[1])
+        });
+      },
+      _fire: function() {
+        this.async(function(){
+          console.log('%cgun %s %cavailable',"color:blue",Gun.version,"color:black")
+          this.fire('iron-signal',{name:'gun-loaded',data:{appName:this.appName}});
+        },500)  
+      }
+
+    });
+  </script>
+</dom-module>
+

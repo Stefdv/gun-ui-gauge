@@ -1,0 +1,28 @@
+{
+  "name": "gun-ui-gauge",
+  "main": "gun-ui-gauge.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0",
+    "iron-signals": "PolymerElements/iron-signals#^1.0.3",
+    "gun-ui-lib": "*",
+    "gun-db": "*",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.3.1"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  },
+  "homepage": "https://github.com/Stefdv/gun-ui-gauge",
+  "_release": "05498808cf",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "05498808cf0581664ae18b4a3fe547ec74cda6be"
+  },
+  "_source": "git://github.com/Stefdv/gun-ui-gauge.git",
+  "_target": "master",
+  "_originalSource": "Stefdv/gun-ui-gauge",
+  "_direct": true
+}

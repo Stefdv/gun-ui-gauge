@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+  <head>
+    <title>gun-db demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../../iron-flex-layout/iron-flex-layout-classes.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+
+    <link rel="import" href="../v5/gun-db.html">
+
+    <style is="custom-style" include="demo-pages-shared-styles">
+     .note {font-variant: small-caps;
+        font-style: italic;}
+    .note span { font-size 12px; }
+     demo-snippet {
+      max-width:80%!important;
+      width:80%!important;
+    }
+    .var {color:blue;}
+    </style>
+    <script>
+    console.log('You will see several messages about Gun already loaded\nthis is because this demo page actually loads each example!')
+    console.log("%cgun is NOT AVAILABLE in this console since the demo's run in an i-frame","color:green")
+    </script>
+  </head>
+  <body>
+  <div class="vertical-section-container centered">
+      <p class="note">You should only have one `gun-db` in your page !!<br>
+      'gun-db' is required by the <a href="" target="_blank">'gun-ui-lib'</a> !!</p>
+
+      <h3>`gun-db` gives you the variable <span class="var">gun</span>
+  </div>  
+    <div class="vertical-section-container centered">
+      <h3>gun-db</h3>
+      <demo-snippet>
+      <p>No peers, no file</p>
+        <template>
+          <gun-db></gun-db>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <div class="vertical-section-container centered">
+      <h3>gun-db with one peer</h3>
+      <demo-snippet>
+     
+        <template>
+          <gun-db peers="http://localhost/gun"></gun-db>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <div class="vertical-section-container centered">
+      <h3>gun-db with multiple peers</h3>
+      
+      <demo-snippet>
+      <p>Add multiple peers as one string but comma seperated</p>
+        <template>
+          <gun-db peers="http://localhost/gun,http://MyOtherServer.com/gun"></gun-db>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <div class="vertical-section-container centered">
+      <h3>gun-db file</h3>
+      
+      <demo-snippet>
+      <p><b>The file API is not meant for production</b><br>
+      Normally Gun defaults to a file 'data.json' but `gun-db` defaults to false
+      </p>
+        <template>
+          <gun-db file="data.json"></gun-db>
+        </template>
+      </demo-snippet>
+    </div>
+
+     <div class="vertical-section-container centered">
+      <h3>add modules</h3>
+      
+      <demo-snippet>
+      <p><b>Currently only the 'guntagger' module is integrated</b></p>
+      <p>Add <a href="https://github.com/amark/gun/wiki/modules" target="_blank">modules</a> by setting there name as attribute</p>
+      </p>
+        <template>
+          <gun-db guntagger></gun-db>
+        </template>
+      </demo-snippet>
+    </div>
+
+  </body>
+</html>

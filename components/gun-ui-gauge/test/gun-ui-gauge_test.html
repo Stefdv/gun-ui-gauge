@@ -1,0 +1,53 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>gun-ui-gauge test</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+     <link rel="import" href="../../iron-signals/iron-signals.html">
+    <link rel="import" href="../../gun-db/gun-db.html">
+
+    <link rel="import" href="../gun-ui-gauge.html">
+  </head>
+  <body>
+    <gun-db></gun-db>
+   
+    <test-fixture id="basic">
+      <template>
+        <gun-ui-gauge parent="test" prop="a"></gun-ui-gauge>
+      </template>
+    </test-fixture>
+
+    <script>
+    localStorage.clear()
+    setTimeout(function(){
+      suite('gun-ui-gauge', function() {
+        test('check for gun presence',function() {
+            assert.isTrue(typeof gun !== undefined && gun instanceof Gun)
+        });
+        test('set value in gun',function(){
+          gun.get('test').path('a').put(10)
+        })
+        test('get value from gun',function() {
+          gun.get('test').path('a').val(function(val){
+            assert.equal(val,10)
+          })
+        })
+        test('instantiating the element works', function() {
+          var element = fixture('basic');
+           assert.isTrue(element.gauge instanceof radial)
+          
+        });
+
+
+      },10000)
+    
+
+
+      });
+    </script>
+  </body>
+</html>

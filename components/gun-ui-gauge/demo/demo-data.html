@@ -1,0 +1,102 @@
+ <link rel="import" href="../../iron-signals/iron-signals.html">
+ <link rel="import" href="../gun-ui-gauge.html">
+
+<dom-module id="demo-data">
+	<template>
+		<style>
+			:host {
+				display: block;
+			}
+		</style>
+		 <iron-signals on-iron-signal-gun-loaded="_gunLoaded"></iron-signals> 
+		 <!-- hidden because i only need it to interact with for the demo data -->
+		   <gun-ui-gauge hidden
+              parent="demo" prop="humidity"
+              threshold-val="50"
+               on-threshold="_thresholdMsg"
+               on-measured="_measuredMsg"
+            ></gun-ui-gauge>
+	</template>
+	<script>
+		Polymer({
+			is: 'demo-data',
+			properties:{
+				gc: {
+					type: Object
+				},
+				line1: {type:String,value:"waiting for message",notify:true},
+				line2: {type:String,value:"waiting for message",notify:true},
+				line3: {type:String,value:"waiting for message",notify:true},
+				line4: {type:String,value:"waiting for message",notify:true},
+				sections: {type: Array,value:function() { return [
+														    {start:0,stop:25,color:"rgba(0, 0, 220, 0.3)"},
+														{start:25,stop:50,color:'rgba(0, 220, 0, 0.3)'}
+														] },
+														notify:true
+									},
+			
+				gunLoaded: {
+					type: Boolean,
+					value:false,
+					observer:'_gunLoadedChanged'
+				},
+				val: {type:Number}
+			},
+			ready: function(){
+				localStorage.clear()
+			},
+			_gunLoaded: function() {
+				this.gunLoaded = true;
+			},
+			_gunLoadedChanged:function() {
+				if(this.gunLoaded) {
+					this.startInterval()
+					gun.get('demo').path('humidity').on(function(val){
+						this.line1 = "gun.get('demo').path('humidity').put(" + val.toFixed(2)+")"
+						//this.setData("gun.get('demo').path('humidity').put(" + val.toFixed(2)+")",1)
+					}.bind(this))
+					//this.setData();
+				}
+			},
+			startInterval: function() {
+				var self = this
+
+				 setInterval(function(){
+
+        	self.val =Math.random() * 100 
+        	//self.setData("gun.get('demo').path('humidity').put(" + val.toFixed(2)+")",1)
+		      gun.get('demo').path('humidity').put(self.val)
+		      },4200)
+				},
+			setData: function(msg,line) {
+				this['line'+line] = msg
+			},
+			_thresholdMsg: function(e,detail) {
+				var objStr
+				
+				var str;
+				switch(detail.name) {
+				 case 'exceed' : str = 'Threshold ("'+ detail.detail.pr+'") exceeded by ' + detail.detail.by.toFixed(2) + '%';
+				 								 objStr = '{name:"exceed",detail:{pr:"humidity",by:'+detail.detail.by.toFixed(2)+',with:' + +detail.detail.with.toFixed(2) +'}}'
+				  break;
+				 case 'normal' : str = 'Threshold ("'+ detail.detail.pr+'") back to normal';
+				 								  objStr = '{name:"normal",detail:{pr:"humidity"}}'
+
+				 break;
+				}
+				this.setData(objStr,3)
+			},
+			_measuredMsg: function(e,detail) {
+				var str;
+				var val = detail.detail.value.toFixed(2);
+				var prop = detail.detail.pr
+			
+				switch(detail.name) {
+					case 'min' : str = '{name:"min",detail:{pr:"humidity",value:'+val+'}}';break;
+					case 'max' : str = '{name:"max",detail:{pr:"humidity",value:'+val+'}}';break;
+				}
+				this.setData(str,4)
+			}
+		});
+	</script>
+</dom-module>
