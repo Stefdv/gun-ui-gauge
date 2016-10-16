@@ -1,0 +1,515 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-signals/iron-signals.html">
+<link rel="import" href="../gun-ui-lib/gun-ui-lib.html">
+<script src="js/radial.js"></script>
+
+<!--
+Install with bower:
+
+    bower install gun-ui-gauge
+
+`<gun-ui-gauge>` injects an awesome gauge into your page.
+
+ In typical use, just slap a `<gun-ui-gauge>` somewhere in your page,
+ add a parent and prop:
+
+      <gun-ui-gauge parent="livingroom" prop="humidity"></<gun-ui-gauge>
+
+Wham! You got a gauge that updates itself when the prop changes in Gun!
+
+See the demo! ( button upper right)
+
+@demo demo/index.html 
+-->
+
+<dom-module id="gun-ui-gauge">
+  <template>
+    <style>
+      :host {display: block;}
+    </style>
+    <!-- 
+    	if gun is not loaded  but it should 
+    	gun-db will be placed here
+    -->
+    <div id="holster"></div>
+   	<iron-signals on-iron-signal-gun-loaded="_gunLoaded"></iron-signals>
+	    <canvas id='cvs' width='[[width]]' height='[[height]]' >
+       Canvas not supported in your browser
+    </canvas>	
+
+  </template>
+
+<script>
+		Polymer({
+			is: 'gun-ui-gauge',
+			properties: {
+				/** the gauge itself */
+				_gauge: {type:Object, value: function() { return {}}	},
+
+				/**
+				 * Animate the needle from value to value
+				 * @type {Boolan}
+				 */
+				animated: {type:Boolean,value:true},
+
+				/**
+				 * Speed of the animation
+				 * @type {Number}
+				 */
+				animSpeed: {type: Number,value:2.5},	
+	
+			/**
+			 * Set your areas as Objects in an Array.<br>
+			 * You should do this through a variable<br>
+			 * ```
+			 * var areas = [
+			 * 	{start:0,stop:50,color:"rgba(0, 220,0 , 0.3)"},
+			 * 	{start:75,stop:100,color:"rgba(0, 0, 220, 0.3)"}
+			 * 	]
+			 * ```
+			 * Then set attribute 'areas="[[areas]]"'
+			 * @type {Array}
+			 */
+			 	areas: {
+			 		type: Array,
+			 		value: function() {
+			 			return []
+			 		}
+			 	},
+
+			 	/**
+			 	 * if ticksFormat is 'FRACTIONAL'<br> 
+			 	 * number of decimals
+			 	 * @type {Number}
+			 	 */
+				fractionalDecimals: {type: Number,value:1},
+
+				/**
+				 * frame( outer ring) type <br>
+				 * BLACK_METAL, METAL, SHINY_METAL, BRASS,<br>
+				 * STEEL, CHROME, GOLD, ANTHRACITE, TILTED_GRAY,<br>
+				 * TILTED_BLACK,GLOSSY_METAL
+				 * @type {String}
+				 */
+				frame: {type: String,value:'BRUSHED_STAINLESS'},
+
+				/**
+				 * Hide the frame ( outer ring )
+				 * @type {Boolean}
+				 */
+				frameOff: {type:Boolean,value:false},
+
+				/** color of the Knob  <br>
+				* BLACK, BRASS, SILVER
+				* @type {String}
+				*/
+				knobColor: {type: String,value:"BLACK"},	
+
+				/**
+				 * type of knob<br>
+				 * METAL_KNOB,STANDARD_KNOB
+				 * @type {String}
+				 */
+				knobType: {type: String,value: 'METAL_KNOB'},	
+
+				/**
+				 * lcd color theme<br>
+				 * RED, GREEN, BLUE, ORANGE, YELLOW, WHITE,<br>
+				 * BEIGE, GRAY, BLACK, BEIGE, BLUE2, BLUE_BLACK,<br>
+				 * BLUE_DARKBLUE, BLUE_GRAY, STANDARD,<br>
+				 * STANDARD_GREEN, BLUE_BLUE, RED_DARKRED,<br>
+				 * DARKBLUE, LILA, BLACKRED, DARKGREEN, AMBER,<br>
+				 * LIGHTBLUE,SECTIONS
+				 * @type {String}
+				 */
+				lcd: {type: String,value:'NONE'},
+
+				/** 
+				 * Number of decimals in the lcd
+				 * @type {Number}
+				 */
+				lcdDecimals: {type: Number,value:1},	
+
+				/**
+				* color of the (threshold) led <br>
+				* RED, GREEN, BLUE, ORANGE, YELLOW, CYAN, MAGENTA
+				* @type {String}
+				*/
+				led: {type: String,value:'NONE'},
+
+				/**
+				 * Max scale value
+				 * @type {Number}
+				 */
+				max: {type: Number,value:100},
+
+				/**
+				 * Show max value marker
+				 * @type {Boolean}
+				 */
+				maxValue: { type: Boolean,value:false}, 
+
+				/**
+				 * Min scale value
+				 * @type {Number}
+				 */
+				min: {type: Number,value:0}, 
+
+				/**
+				 * Show min value marker
+				 * @type {Boolean}
+				 */
+				minValue: { type: Boolean,value:false}, 
+
+				/** 
+				 * When eg min=0 and max=77
+				 * scale will be 0-80 
+				 * @type {Boolean}
+				 */
+				niceScale: {type: Boolean,value: false},	
+
+				/**
+				 * Use an odometer instead of the lcd
+				 * @type {Boolean}
+				 */
+				odometer: {type: Boolean,value: false},	
+				/**
+				 * Please see documentation for ...
+				 * @type {String}
+				 */
+				odometerParams: {type: String},	
+				/**
+				 * Please see documentation for ...
+				 * @type {Boolean}
+				 */											
+				odometerUseValue: {type: Boolean},	
+
+				/**
+				 * <b>Gun related</b><br>
+				 * the key/soul of your node<br>
+				 * relates to gun like `gun.get(parent)`
+				 * @type {String}
+				 */
+				parent: {type: String,value: false}, 
+
+				/** Plate type <br>
+				 * DARK_GRAY, SATIN_GRAY, LIGHT_GRAY, WHITE,<br>
+				 * BLACK, BEIGE, BROWN, RED, GREEN, BLUE, ANTHRACITE,<br>
+				 * MUD, PUNCHED_SHEET, CARBON,STAINLESS,<br>
+				 * BRUSHED_METAL, BRUSHED_STAINLESS, TURNED
+				 * @type {String}
+				*/
+				plate: {type: String,value:'BRUSHED_STAINLESS'},
+
+				/**
+				 * Type of pointer/needle<br>
+				 * 1 - 16
+				 * @type {Number}
+				 */
+				pointer: {type: Number,value:1},	
+
+				/** 
+				 * Pointer (needle) color <br>
+				 * RED, GREEN, BLUE, ORANGE, YELLOW, CYAN,<br>
+				 * MAGENTA, WHITE, GRAY, BLACK, RAITH,<br>
+				 * GREEN_LCD, JUG_GREEN
+				 * @type {String}
+				*/
+				pointerColor: {type: String,value:'RED'},
+
+        /**
+         * <b>Gun related</b><br>
+         * relates to gun like `gun.get().path(prop)`
+         * @type {String}
+         */
+				prop: {type: String,value: false}, 
+
+				/** 
+				 * The number of quarters the scale will use.
+				 * 1 - 5 ('5' slightly differs from 4 )
+				 * @type {Number}
+				 */
+				quadrants:  {type: Number,value: 4},  
+
+				/**
+				 * Reflection on the gauge
+				 * Note: This is best visible with dark themes
+				 * 1-5
+				 * @type {Number}
+				 */
+				reflection : {type: Number,value:1}, 
+
+				/**
+				 * Colored sections<br>
+				 * Set your sections as Objects in an Array<br>
+				 * You should do this through a variable
+				 * ```
+				 * var sections = [
+				 * 	{start:0,stop:25,color:"rgba(0, 0, 220, 0.3)"},
+				 *	{start:25,stop:50,color:'rgba(0, 220, 0, 0.3)'}
+				 *	]
+				 * ```
+				 * Then set attribute 'sections="[[sections]]"'
+				 * @type {Array}
+				*/
+				sections: { 
+					type: Array,
+					value: function() {
+						return [] 
+			 		}
+			 	},
+
+			 	/**
+			 	 * size of the gauge
+			 	 * @type {Number}
+			 	 */
+			 	size: {type: Number,value:201},
+
+			 	/**
+			 	 * value of threshold
+			 	 * @type {Number}
+			 	 */
+			 	thresholdVal : {type: Number,value: -1},
+	
+			 	/**
+			 	 * kind of ticks<br>
+			 	 * FRACTIONAL, SCIENTIFIC, STANDARD
+			 	 * @type {String}
+			 	 */
+				ticksFormat: {type: String,value:'STANDARD'},   
+
+				/**
+				 * orientation of the ticks<br>
+				 * HORIZONTAL, NORMAL,TANGENT
+				 * @type {String}
+				 */
+				ticksOrientation: {type: String,value: 'TANGENT'}, 
+
+				/** 
+				 * title inside the gauge <br>
+				 * only when you're <b>NOT using gun</b><br>
+				 * 'prop' will override title
+				 * @type {String}
+				 */
+				title: {type: String}, 
+
+				/** 
+				 * show trend?<br>
+				 * visualize the value going up/down/stable 
+				 * @type {Boolean}
+				*/
+				trend: {type: Boolean,value: false},   
+
+				/**
+				* trend colors for [UP, STEADY, DOWN] <br>
+				* RED, GREEN, BLUE, ORANGE, YELLOW, CYAN, MAGENTA
+				* @type {Array}
+				*/
+				trendColors: {type: Array,value:function(){return ['RED','GREEN','CYAN']}},
+
+				/**
+				 * the units this gauge represents
+				 * @type {String}
+				 */
+				units: {type: String,value: ''},	
+
+				/**
+				 * color of the user led <br>
+				 * RED, GREEN, BLUE, ORANGE, YELLOW, CYAN, MAGENTA
+				 * @type {String}
+				*/
+				userLed: {type: String,value:'NONE'},
+
+				/**
+				 * <b>Controlled by Gun</b><br>
+				 * value of the gauge<br>
+				 * @type {Number}
+				*/  									
+				_value: {type: Number,	observer:'_valueChanged'},
+			 
+/* ----------      EXTRAS      ------------------------*/
+				
+			  alarmSound: {type: String, value:null},    
+			  alarmLoop: {type: Boolean,value:false} ,     
+				//customLayer: {type: String,value:null},								//url
+			},
+			ready: function() {
+				this.style.width = this.size +'px'
+				this.thresholdOver = false;
+				this.thresholdNrm = true
+this._init();
+		
+
+			
+
+			},
+			 _gunExists: function() {
+			 	var gun = gun || undefined
+          return (typeof gun !== undefined && gun instanceof Gun)
+      },
+
+			/**  
+			 * 'gun-db' will publish a message
+			 *  when Gun is available. This will trigger
+			 *  the element to subscribe to its property
+			*/
+			_gunLoaded: function() {
+				this.gunLoaded = true;
+				if(this.parent) { this._subscribe() }
+			},
+		  /**
+		   * When 'gunLoaded' message is received
+		   * the element will subscribe itself to 
+		   * the property
+		   */
+			_subscribe: function() {
+					gun.get(this.parent).path(this.prop).on(function(v){
+						if(this._value !== v) { 
+							//console.log('%c%s setting value: %s',"color:brown",this.prop,v)
+							this._value =v;
+						}
+				}.bind(this))
+			},
+			/**
+			 * Observer for _value<br>
+			 * Check if gauge is initialized<br>
+			 * call _alerts() when animation is finished
+			 * @param  {Number} newValue [_value]
+			 */
+			_valueChanged:function(newValue) {
+			 if(this._gauge instanceof radial) {
+			 	var cb = this._alerts.bind(this)
+			 	this.animated ? this._gauge.setValueAnimated(newValue,cb) : this._gauge.setValue(newValue,cb);
+			 } else {
+			 		this._init();
+			 		this._gauge.setValue(newValue,cb)
+			 }
+			},
+
+			/** 
+			 * when the needle animation is finished the callback<br>
+			 * gets called and gives us possible statechanges
+			 * @param {Object} alerts
+			 */
+			_alerts: function(alerts) {
+			   this._thresholdReachedChanged(	alerts.thresholdReached);
+			   this._maxMeasuredValChanged( alerts.maxMeasuredValChanged)
+			   this._minMeasuredValChanged( alerts.minMeasuredValChanged)
+			  
+			},
+			/** The state changes will trigger below functions
+			    and so we can act upon them
+			    TODO: If the value increase and still exceeds the threshold
+			    the change will not fire !!
+			*/
+			_thresholdReachedChanged: function(state) {
+				state ? this._tresholdReached() : this._tresholdNormal();
+			},
+			_maxMeasuredValChanged: function(state) {
+				if(state)this.fire('measured',{name:'max',detail:{pr:this.prop,value:this._value}})
+			},
+			_minMeasuredValChanged: function(state) {
+				if(state)this.fire('measured',{name:'min',detail:{pr:this.prop,value:this._value}})
+			},
+			_tresholdReached: function() {
+				// threshold is 20, exceeded by 2 ... exceeded with 22
+				var pa = this.parent,
+				pr = this.prop,
+				ex = this._value - this.thresholdVal
+				this.fire('threshold',{name:'exceed',detail:{pr:this.prop,by:ex,with:this._value}})
+				this.thresholdOver = true;
+				this.thresholdNrm = false;
+			},
+			_tresholdNormal: function() {
+				if(!this.thresholdNrm){  this.fire('threshold',{name:'normal',detail:{pr:this.prop}}) }
+				this.thresholdOver = false;
+				this.thresholdNrm = true;
+			},
+
+
+			/**
+			 * Turn user led on or off
+			 * @param {[Boolean]} on [control the state of the user led]
+			 */
+			setUserLedOnOff: function(on) {
+				this._gauge.setUserLedOnOff(on)
+			},
+			_toCamelCase: function(str) {
+				var cC = str
+		        .replace(/\s(.)/g, function($1) { return $1.toUpperCase(); })
+		        .replace(/\s/g, '')
+		        .replace(/^(.)/, function($1) { return $1.toLowerCase(); });
+		        
+				 return _this.titleCase(cC)
+			},
+			_titleCase: function(string) { 
+				return string.charAt(0).toUpperCase() + string.slice(1); 
+			},
+			 _addGundb: function() {
+console.log('Adding Gun')
+        this.importHref('../bower_components/gun-db/v5/gun-db.html', function(e) {
+          var newGun = document.createElement('gun-db');
+          Polymer.dom(this.$.holster).appendChild(newGun);  
+        }, function(e) {
+          // loading error 
+         
+        });
+      },
+			/* the actual creation of the gauge */
+			_init: function() {
+				if(this.led == 'NONE') {this.led = false;this.ledColor = 'RED'} 
+				else {this.ledColor = this.led;this.led=true;}
+				if(this.lcd == 'NONE') {this.lcd = false;this.lcdColor = 'RED'} 
+				else {this.lcdColor = this.lcd;this.lcd=true;}
+				if(this.userLed == 'NONE') {this.userLed = false;this.userLedColor = 'RED'} 
+				else {this.userLedColor = this.userLed;this.userLed=true;}
+
+        this._gauge = new radial(
+          this.$.cvs, {
+            gaugeType: steelseries.GaugeType['TYPE'+this.quadrants],
+            size: this.size,
+            minValue: this.min,                 
+            maxValue: this.max, 
+            titleString: this.title? this.title: this.prop, 
+            unitString: this.units, 
+            threshold: this.thresholdVal,
+            thresholdRising: this.thresholdRising,
+            frameVisible: !this.frameOff,
+            backgroundVisible: this.backgroundVisible,
+            thresholdVisible: this.thresholdVal >= this.min,
+            trendVisible: this.trend,
+            lcdVisible: this.lcd,
+            ledVisible: this.led,
+            userLedVisible: this.userLed,
+            minMeasuredValueVisible: this.minValue,
+            maxMeasuredValueVisible: this.maxValue,
+            useOdometer: this.odometer,
+            frameDesign: steelseries.FrameDesign[this.frame], 
+            backgroundColor: steelseries.BackgroundColor[this.plate],
+            foregroundType:  steelseries.ForegroundType['TYPE'+this.reflection] ,
+            pointerType: steelseries.PointerType['TYPE'+this.pointer], 
+            pointerColor: steelseries.ColorDef[this.pointerColor], 
+            knobType: steelseries.KnobType[this.knobType],
+            knobStyle: steelseries.KnobStyle[this.knobColor],
+            lcdColor: steelseries.LcdColor[this.lcdColor],                     
+            ledColor: steelseries.LedColor[this.ledColor+'_LED'] , 
+            userLedColor: steelseries.LedColor[this.userLedColor+'_LED'],
+    				lcdDecimals: this.lcdDecimals,
+    				labelNumberFormat: steelseries.LabelNumberFormat[this.ticksFormat],
+            fractionalScaleDecimals: this.fractionalScaleDecimals,
+            tickLabelOrientation:this.ticksOrientation,
+            niceScale: this.niceScale, 		// ?
+            fullScaleDeflectionTime: this.animSpeed || 2.5, // animation time from min - max scale
+            section: this.sections,
+            area: this.areas, 
+            playAlarm: this.alarmSound ? true : false,
+            alarmSound: this.alarmSound,
+            alarmLoop:this.alarmLoop,
+            customLayer:this.customLayer
+          }
+        );  
+   
+			},
+		});
+	</script>
+</dom-module>

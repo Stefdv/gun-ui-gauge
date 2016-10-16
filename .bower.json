@@ -1,0 +1,38 @@
+{
+  "name": "gun-ui-gauge",
+  "authors": [
+    "Stefdv <stefdv2@hotmail.com>"
+  ],
+  "description": "Member of the gun-ui-lib",
+  "main": "gun-ui-gauge.html",
+  "keywords": [
+    "GunDB",
+    "GunDB",
+    "ui",
+    "Gun",
+    "gauge"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/Stefdv/gun-ui-gauge",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "gun-ui-lib": "*",
+    "gun-db": "*"
+  },
+  "_release": "62c97605e4",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "62c97605e4e688d2b3b7b292605d656a00824b80"
+  },
+  "_source": "https://github.com/Stefdv/gun-ui-gauge.git",
+  "_target": "*",
+  "_originalSource": "gun-ui-gauge",
+  "_direct": true
+}
